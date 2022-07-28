@@ -15,14 +15,16 @@
         <Dialog v-model:show="diVisible" >
             <PostForm @create="createPost"/>
         </Dialog>
-        <PostList
-                v-if="!isLoading"
-                  @remove="deletePost"
-                  :posts="sortAndSearch"/>
+            <PostList
+                    v-if="!isLoading"
+                    @remove="deletePost"
+                    :posts="sortAndSearch"/>
+
         <div v-else>
             Загрузка!
         </div>
-        <pages :totalP="totalP" v-model:page="page"/>
+        <div ref="observer" class="observer"></div>
+     <!--   <pages :totalP="totalP" v-model:page="page"/>-->
     </div>
 
 </template>
@@ -84,10 +86,37 @@
              finally {
                  this.isLoading = false
              }
+           },
+           async fetchMoreData() {
+               try {
+                   this.page ++;
+                   const {data, headers} = await axios.get("https://jsonplaceholder.typicode.com/posts",{
+                       params: {
+                           _page: this.page,
+                           _limit: this.limit
+                       }
+                   });
+                   this.totalP = Math.ceil(headers["x-total-count"] / this.limit)
+                   this.posts = [...this.posts,...data]
+               }
+               catch (e) {
+                   console.log(e.message)
+               }
            }
        },
        mounted() {
            this.fetchData()
+           const options = {
+               rootMargin: '0px',
+               threshold: 1.0
+           }
+           const callback = (entries, observer) => {
+               if( entries[0].isIntersecting && this.page < this.totalP) {
+                   this.fetchMoreData()
+               }
+           };
+           const observer = new IntersectionObserver(callback, options);
+           observer.observe(this.$refs.observer)
        },
        computed: {
            sortedPosts() {
@@ -98,9 +127,9 @@
            }
        },
        watch: {
-           page() {
+/*           page() {
                this.fetchData()
-           }
+           }*/
        }
    }
 </script>
@@ -127,6 +156,9 @@
     }
     .btn {
 
+    }
+    .observer {
+        height: 30px;
     }
 
 </style>
