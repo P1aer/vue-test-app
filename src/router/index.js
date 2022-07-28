@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import MainView from "@/views/MainView";
 import PostView from "@/views/PostView";
 import SinglePostView from "@/views/SinglePostView";
+import PageWithStore from "@/views/PageWithStore";
 
 
 const routes = [
@@ -17,6 +18,10 @@ const routes = [
     path: '/post/:id',
     component: SinglePostView
   },
+  {
+    path: '/vue',
+    component: PageWithStore
+  }
 
 ]
 

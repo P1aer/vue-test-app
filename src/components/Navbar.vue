@@ -3,6 +3,7 @@
         <div @click="$router.push('/')"> TEST</div>
         <div class="navbar-links">
             <cool-btn @click="$router.push('/posts')">Списки</cool-btn>
+            <cool-btn @click="$router.push('/vue')">Списки но круче</cool-btn>
         </div>
     </div>
 </template>

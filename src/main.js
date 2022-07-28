@@ -14,4 +14,7 @@ components.forEach(comp => {
 
 app.directive('intersection',Vintersection)
 
-app.use(router).mount('#app')
+app
+    .use(router)
+    .use(store)
+    .mount('#app')
