@@ -22,6 +22,7 @@
         <div v-else>
             Загрузка!
         </div>
+        <pages :totalP="totalP" v-model:page="page"/>
     </div>
 
 </template>
@@ -42,6 +43,9 @@
            isLoading: true,
            selectSort: "",
            searchQ: "",
+           page: 1,
+           totalP: 0,
+           limit: 10,
            options: [
                {
                    value:"title",
@@ -65,7 +69,13 @@
            async fetchData() {
              try {
                  this.isLoading = true
-                 const {data} = await axios.get("https://jsonplaceholder.typicode.com/posts?_limit=10");
+                 const {data, headers} = await axios.get("https://jsonplaceholder.typicode.com/posts",{
+                     params: {
+                         _page: this.page,
+                         _limit: this.limit
+                     }
+                 });
+                 this.totalP =Math.ceil(headers["x-total-count"] / this.limit)
                  this.posts = data
              }
              catch (e) {
@@ -88,6 +98,9 @@
            }
        },
        watch: {
+           page() {
+               this.fetchData()
+           }
        }
    }
 </script>
@@ -115,4 +128,5 @@
     .btn {
 
     }
+
 </style>
