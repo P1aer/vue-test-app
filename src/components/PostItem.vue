@@ -9,9 +9,12 @@
             </div>
         </div>
         <div class="post-btns">
-            <cool-btn
-                    @click="$emit('remove',post)"
-            >убери</cool-btn>
+            <cool-btn @click="$emit('remove',post)">
+                убери
+            </cool-btn>
+            <cool-btn @click="$router.push(`/post/${post.id}`)">
+                открой
+            </cool-btn>
         </div>
     </div>
 </template>
